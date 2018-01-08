@@ -1,15 +1,16 @@
 .album {
-  min-height: 50rem; /* Can be removed; just added for demo purposes */
-  padding-top: 3rem;
-  padding-bottom: 3rem;
-  background-color: #f7f7f7;
+  /*min-height: 50rem;*/
+   /* Can be removed; just added for demo purposes */
+  /*padding-top: 3rem;*/
+  padding-bottom: 20px;
+  /*background-color: #f7f7f7;*/
 }
 
 .card {
   float: left;
   /*width: 33.333%;*/
-  padding: .75rem;
-  margin-bottom: 2rem;
+  padding: 0;
+  margin-bottom: 0;
   border: 0;
 }
 
@@ -41,4 +42,172 @@ footer p {
   .card {
     width: 33.333%;
   }
+}
+
+
+figure.effect-sadie figcaption::before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: -webkit-linear-gradient(top, rgba(72,76,97,0) 0%, rgba(72,76,97,0.8) 75%);
+  background: linear-gradient(to bottom, rgba(72,76,97,0) 0%, rgba(72,76,97,0.8) 75%);
+  content: '';
+  opacity: 0;
+  -webkit-transform: translate3d(0,50%,0);
+  transform: translate3d(0,50%,0);
+}
+
+figure {
+  padding: 5px;
+}
+
+figure.effect-sadie h2 {
+  font-weight: 400;
+  font-size: 3rem;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  color: #484c61;
+  -webkit-transition: -webkit-transform 0.35s, color 0.35s;
+  transition: transform 0.35s, color 0.35s;
+  -webkit-transform: translate3d(0,-50%,0);
+  transform: translate3d(0,-50%,0);
+}
+
+figure.effect-sadie figcaption::before,
+figure.effect-sadie p {
+  -webkit-transition: opacity 0.35s, -webkit-transform 0.35s;
+  transition: opacity 0.35s, transform 0.35s;
+}
+
+figure.effect-sadie p {
+  position: absolute;
+  bottom: 10px;
+  left: 0;
+  padding: 2em;
+  width: 100%;
+  opacity: 0;
+  -webkit-transform: translate3d(0,10px,0);
+  transform: translate3d(0,10px,0);
+}
+
+figure.effect-sadie:hover h2 {
+  color: #fff;
+  -webkit-transform: translate3d(0,-50%,0) translate3d(0,-40px,0);
+  transform: translate3d(0,-50%,0) translate3d(0,-40px,0);
+}
+
+figure.effect-sadie:hover figcaption::before,
+figure.effect-sadie:hover p {
+  opacity: 1;
+  -webkit-transform: translate3d(0,0,0);
+  transform: translate3d(0,0,0);
+}
+
+.unit figure figcaption, .unit figure figcaption > a {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.unit figure figcaption {
+  display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1em;
+    color: #fff;
+    text-transform: uppercase;
+    font-size: 1.25em;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
+
+.unit figure {
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+}
+
+.unit figure img {
+    position: relative;
+    display: block;
+    max-width: 100%;
+    opacity: 0.8;
+}
+
+p.tm-figure-description { font-size: 1.2rem; }
+
+p.tm-figure-description {
+    font-weight: 600;
+    font-size: 1.5rem;
+    margin: 0;
+    padding: 2em;
+    opacity: 0;
+  -webkit-transform: translate3d(0,10px,0);
+  transform: translate3d(0,10px,0);
+}
+
+
+figure.effect-sadie:hover .tm-figure-title,
+figure.effect-sadie:hover p.tm-figure-description {
+    opacity: 1;
+    text-shadow:  2px 2px 6px #000; 
+}
+
+ figure.effect-sadie:hover p.tm-figure-description {
+  -webkit-transform: translate3d(0,0,0);
+  transform: translate3d(0,0,0);
+}
+
+figure > figcaption > a{
+  background-color: transparent;
+  color: black;
+    display: table-cell;
+    font-weight: 400;
+    font-size: 1em;
+  vertical-align: middle;
+    width: 130px; 
+    text-decoration: none;
+}
+
+figure > figcaption > a:hover {
+  text-decoration: none;
+}
+
+figure {
+  margin-bottom: 0;
+  /*height: 320px;*/
+  height: 100%;
+}
+
+.full-width {
+  width: 100%;
+  height: 100%;
+}
+
+section div.row {
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+section div.row div.sort {
+  background-color: #ccc;
+  padding: 10px 20px;
+  margin: 20px;
+}
+
+section div.row div.sort span {
+  color: #fff;
+  text-transform: uppercase;
+  font-weight: bolder;
+}
+
+section div.row div.sort a:hover {
+  text-decoration: none;
 }

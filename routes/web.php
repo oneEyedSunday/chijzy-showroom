@@ -11,20 +11,6 @@
 |
 */
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
-
-Route::get('/test', function(){
-	$img = Image::make('foo.jpg')->resize(300,200);
-	return $img->response('jpg');
-});
-
-Route::get('/test/watermark', function(){
-	$img = Image::make('Cover.jpg')->insert('owner/chijzy2020.png', 'bottom-left')->save('watermarked.jpg');
-	$send = Image::make('watermarked.jpg');
-	return $send->response('jpg');
-});
 
 Route::get('/fish/{filename}', function($filename){
 	// $file = Storage::disk('public')->get('uploads/' . $filename);
@@ -41,18 +27,31 @@ Route::get('/fish/{filename}', function($filename){
 	$response->header('Content-Type', $type);
 	return $response;
 });
-Auth::routes();
+
+// replace with custom
+// removing register
+// Auth::routes();
 
 Route::get('albums/{tag?}', 'PagesController@getAlbums')->name('albums.show');
+Route::get('album/{slug}', 'PagesController@MediaInAlbum')->where('slug', '[\w\d\-\_]+')->name('album.single');
 Route::get('photos/{tag?}', 'PagesController@getPhotos')->name('photos.show');
+Route::get('photo/{slug}', 'PagesController@getPhoto')->where('slug', '[\w\d\-\_]+')->name('photo.single');
+Route::get('designs/{tag?}', 'PagesController@getDesigns')->name('designs.show');
+Route::get('design/{slug}', 'PagesController@getDesign')->where('slug', '[\w\d\-\_]+')->name('design.single');
 Route::get('contact', 'PagesController@getContact')->name('contact.show');
+Route::post('contact', 'PagesController@postContact')->name('contact.post');
+Route::get('album/{album_id}', 'PagesController@MediaInAlbum')->name('album.show');
+Route::get('albums', 'PagesController@getAlbums')->name('albums.list');
 Route::get('/', 'PagesController@index')->name('landing');
 
 // manage routes
 Route::prefix('manage')->middleware('auth')->group(function(){
 	Route::get('/', 'ManageController@index');
 	Route::get('/dashboard', 'ManageController@dashboard')->name('manage.dashboard');
+	Route::post('/dashboard', 'UpdateUserController@update')->name('manage.update');
 	Route::get('/frontend', 'ManageController@managefront')->name('manage.frontend');
+	Route::post('/frontend', 'ManageController@postfront')->name('manage.set.frontend');
+	Route::post('/frontend/maxcarousel', 'ManageController@setfromFrontEnd')->name('manage.set.maxcarousel');
 });
 
 Route::prefix('manage/media')->middleware('auth')->group(function(){
@@ -84,4 +83,13 @@ Route::prefix('manage/tags')->middleware('auth')->group(function(){
 	Route::delete('/delete/{id}', 'TagController@destroy')->name('tags.delete');
 });
 
-// filter routes for front end
+// filter routes for auth
+        
+
+Route::get('login', 'Auth\LoginController@showLoginForm')->name('login')->middleware('guest');
+Route::post('login', 'Auth\LoginController@login')->middleware('guest');
+Route::post('logout', 'Auth\LoginController@logout')->name('logout');
+Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request')->middleware('guest');
+Route::post('password/reset','Auth\ResetPasswordController@reset')->middleware('guest');
+Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm ')->name('password.reset')->middleware('guest');
+Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email')->middleware('guest');

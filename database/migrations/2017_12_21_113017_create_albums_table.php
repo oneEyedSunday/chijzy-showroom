@@ -16,6 +16,7 @@ class CreateAlbumsTable extends Migration
         Schema::create('albums', function (Blueprint $table) {
             $table->increments('id')->unsigned();
             $table->string('title');
+            $table->string('slug',191)->unique();
             $table->text('description')->nullable();
             $table->string('cover_image_url')->default('default_album_cover.png');
             $table->timestamps();

@@ -5,12 +5,10 @@
 	<body>
 		@include('partials.nav.main')
 
-		@include('partials.nav.manage')
-
 		<div class="container">
 			@include('partials._messages')
 				@yield('content')
-			@include('partials._footer')
+				@include('partials.nav.manage')
 		</div>
 		@include('partials._javascripts')
 		@yield('scripts')

@@ -9,59 +9,91 @@
 @endsection
 
 @section('content')
-	<div class="container mt-5 mleft-100">
+	<div class="container mt-5" id="force-left">
         {{-- messages come from message partial --}}
-            <div class="form-group col-md-6">
-                <strong>Caption:</strong>
-                <p class="blockquote">{{$media->caption}}</p>
+            <div class="form-group row">
+                <div class="col-2">
+                  <strong>Caption:</strong>  
+                </div>
+                <div class="col-10">
+                    <p class="blockquote">{{$media->caption}}</p>
+                </div>
             </div>
-            <div class="form-group col-md-6">
-            	<strong>Type:</strong>
-            	<p>{{$media->type}}</p>
+            <div class="form-group row">
+                <div class="col-2">
+                    <strong>Url Slug:</strong>
+                </div>
+                <div class="col-10">
+                    <p class="blockquote">{{$media->slug}}</p>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-2">
+                    <strong>Category:</strong>
+                </div>
+                <div class="col-10">
+                    <p class="blockquote">{{$media->category}}</p>
+                </div>
             </div>
             
-            <div class="form-group col-md-6">
-            	<strong>Tags:</strong>
-                @if(count($media->tags))
+            <div class="form-group row">
+                <div class="col-2">
+                    <strong>Tags:</strong>
+                </div>
+                <div class="col-10">
+                    @if(count($media->tags))
                     @foreach($media->tags as $tag)
-                    
-                    {{-- <span class="tag-link"><a href="{{route('tags.show', $tag->id)}}">{{$tag->name}}</a></span> --}}
-                    <span class="tag-link">{{$tag->name}}</span>
+                    <span class="tag-link mr-2">{{$tag->name}}</span>
                     @endforeach
                 @else
-            	   <p class="blockquote">No tags</p>
+                   <p class="blockquote">No tags</p>
                 @endif
+                </div>
             </div>
-            <div class="form-group col-md-6">
-            	<strong>Description:</strong>
-                @if($media->description)
-                <p>{{ $media->description }}</p>
-                @else
-                <blockquote class="blockquote">No description</blockquote>
-                @endif
+            <div class="form-group row">
+                <div class="col-2">
+                    <strong>Description:</strong>
+                </div>
+            	<div class="col-10">
+                    @if($media->description)
+                    <p class="lead">{{ $media->description }}</p>
+                    @else
+                    <blockquote class="blockquote">No description</blockquote>
+                    @endif
+                </div>
             </div>
-            <div class="form-group col-md-6">
-            	<strong>Public:</strong>&nbsp; {{ $media->visibility ? "Yes" : "No" }}
+            <div class="form-group row">
+                <div class="col-2">
+                    <strong>Public:</strong>
+                </div>
+            	<div class="col-10">
+                 {{ $media->visibility ? "Yes" : "No" }}   
+                </div>
             </div>
-            <div class="form-group col-md-6">
-            	<strong>Album:</strong>
-                @if($media->album)
-            	<p>
-                    <a href="{{ route('album.single.show', [$media->album->id]) }}">{{$media->album->title}}</a>
-                </p>
-                @else
-                    <p>Doesn't belong to any album</p>
-                @endif
+            <div class="form-group row">
+                <div class="col-2">
+                    <strong>Album:</strong>
+                </div>
+            	<div class="col-10">
+                    @if($media->album)
+                    <p class="blockquote">
+                        <a href="{{ route('album.single.show', [$media->album->id]) }}">{{$media->album->title}}</a>
+                    </p>
+                    @else
+                        <p class="blockquote">Doesn't belong to any album</p>
+                    @endif
+                </div>
+                
             </div>
-            <div class="form-group col-md-6">
-                @if($media->type == "video")
-                <video src="{{  asset('uploads/' .$media->url) }}" autoplay="false" class="display-img img img-reponsive"></video>
-                @else 
-                <img src="{{ asset('uploads/'. $media->url) }}" alt="Error with file" class="display-img img img-reponsive">
-                @endif
+            <div class="form-group row">
+                <div class="col offset-lg-1 offset-sm-0 offset-md-0">
+                            <img src="{{ asset('uploads/'. $media->url) }}" alt="Error with file" class="img img-reponsive display-img">
+                        </div>
             </div>
-            <div class="col-md-6">
-                <a href="{{ route('media.single.edit', [$media->id]) }}" class="btn btn-success">Edit</a>
+            <div class="row">
+                <div class="col offset">
+                    <a href="{{ route('media.single.edit', [$media->id]) }}" class="btn btn-success">Edit</a>
+                </div>
             </div>
 
     </form> 

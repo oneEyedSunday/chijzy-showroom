@@ -3,12 +3,17 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Media;
+use App\Album;
+use DB;
 
 class ManageController extends Controller
 {
     //
     public function dashboard(){
-    	return view('manage.dashboard');
+        $a = Album::all()->count();
+        $m = Media::all()->count();
+    	return view('manage.dashboard')->withMedia($m)->withAlbums($a);
     }
 
     public function index(){
@@ -17,57 +22,66 @@ class ManageController extends Controller
 
     public function managefront(){
     	$carousel = self::getCurrentCarouselSpecs();
-    	$p = self::getPrivacyPolicy();
-    	$tos = self::getTermsOfUse();
-    	return view('manage.front')->withCurrentCarousel($carousel)->withPrivacy($p)->withTos($tos);
+    	return view('manage.front')->withCurrentCarousel($carousel)->withnc(self::$noofC);
     }
 
-    static function getCurrentCarouselSpecs(){
-    	return self::$carousel;
+    public function setfromFrontEnd(Request $request){
+        // dd($request);
+        if($request->noCarousel != self::getMaxCarousel()){
+            self::setMaxCarousel($request->noCarousel);
+        }
+        return redirect()->route('manage.frontend')->withCurrentCarousel(self::getMaxCarousel());
     }
 
-    static function getPrivacyPolicy(){
-    	return self::$privacy_policy;
+    public function postfront(Request $request){
+        // dd($request);
+        $bare = [];
+        for($i = 1; $i < 6; $i++){
+            $bare[$i]['img_src'] =  $request->input('img_src' . $i);
+            $bare[$i]['position'] = $request->input('position' . $i);
+            $bare[$i]['heading'] = $request->input('heading' . $i);
+            $bare[$i]['text_body'] = $request->input('text' . $i);
+            $bare[$i]['link_text'] = $request->input('link_text' . $i);
+            $bare[$i]['link_ref'] = $request->input('link_ref' . $i);
+            $bare[$i]['visible'] = $request->input('state' . $i);
+        }
+
+        // dd($bare);
+        DB::table('frontends')->truncate();
+        DB::table('frontends')->insert($bare );
+        return redirect()->route('manage.frontend')->with('success','Carousel updated successfully.');
     }
 
-    static function getTermsOfUse(){
-    	return self::$tos;
+    static $noofC = 5;
+
+    
+    static function getCurrentCarouselSpecs($filter = 'false'){
+        if($filter == 'true'){
+            $fromdb = DB::table('frontends')->where('visible', '1')->get();
+            return $fromdb;
+        }
+
+        $fromdb = DB::table('frontends')->select()->get();
+        // dd($fromdb);
+        $toscreen = array_fill(0, 5, new FrontEnd);
+        for ($i= 0; $i < count($fromdb); $i++) {
+                $toscreen[$i]  = $fromdb[$i];            
+        }
+
+        
+
+        return $toscreen;
     }
 
-    static function setCurrentCarouselSpecs(){
+}
 
-    }
-
-    static $carousel = [
-    	[
-    		"img_src" => "images/carousel/red-bg.jpg",
-    		"img_alt" => "First Slide",
-    		"heading" => "Hey there.",
-    		"text_body" => "Hello i'm David Iloba, a graphic designer and photographer.Welcome to my homepage, while you're around, please feel free to browse the images and share my links to your friends.",
-    		"link_text" => "Contact Me",
-    		"link_ref" => "#", 
-    		"index" => "1"
-    	],
-    	[
-    		"img_src" => "images/carousel/drone-bg.jpg",
-    		"img_alt" => "Second Slide",
-    		"heading" => "Another example headline.",
-    		"text_body" => "Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.",
-    		"link_text" => "Learn more",
-    		"link_ref" => "#",
-    		"index" => "2"
-    	],
-    	[
-    		"img_src" => "images/carousel/girl-bg.jpg",
-    		"img_alt" => "Third Slide",
-    		"heading" => "One more for good measure.",
-    		"text_body" => "Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.",
-    		"link_text" => "Browse Gallery",
-    		"link_ref" => "#",
-    		"index" => "3"
-    	]
-    ];
-
-    static $privacy_policy = "Privacy Policy text";
-    static $tos = "terms of use";
+class FrontEnd {
+    public $img_src = "";
+    public $img_alt = "";
+    public $heading = "";
+    public $text_body = "";
+    public $link_text = "";
+    public $link_ref = "";
+    public $position = "";
+    public $visible = 0;
 }

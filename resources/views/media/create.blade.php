@@ -10,45 +10,50 @@
 @endsection
 
 @section('content')
-	<div class="container mt-5 mleft-100">
-		<h1>Add Media</h1>
+	<div class="container mt-5" id="force-left">
+		<h1 class="text-center">Add Media</h1>
 		 <form action="{{route('media.add.post')}}" class="form" method="POST" enctype="multipart/form-data">
 
         {{ csrf_field() }}
-		
-            <div class="form-group col-md-6">
+            <div class="form-group row">
                 <label for="caption">Caption:</label>
-                <input type="text" id="caption" name="caption" class="form-control" placeholder="Title" maxlength="255">
+                <input type="text" id="caption" name="caption" class="form-control" placeholder="Title" maxlength="191" required>
             </div>
-            <div class="form-group col-md-6">
-            	<label for="type">Type:</label>
-            	<select name="type" id="type" class="form-control">
-            		<option value="image" selected>Image</option>
-            		<option value="video">Video</option>
-            	</select>
+            
+            <div class="form-group row">
+                <label for="slug">Url Slug:</label>
+                <input type="text" name="slug" id="slug" class="form-control" placeholder="Url Slug" required minlength="5" maxlength="191">
             </div>
-            <div class="form-group col-md-6">
+            <div class="form-group row">
+                <label for="category">Category:</label>
+                <select name="category" id="category" class="form-control"  required>
+                    <option value="">--Select a category--</option>
+                    <option value="designs">Designs</option>
+                    <option value="photos">Photos</option>
+                </select>
+            </div>
+            <div class="form-group row">
                 <label for="media">Media:</label>
-                <input type="file" id="media" name="media" class="form-control">
+                <input type="file" id="media" name="media" class="form-control form-control-file" accept="image/*" required >
             </div>
-            <div class="form-group col-md-6">
-            	<label for="tags">Tags:</label>
+            <div class="form-group row">
+            	<label for="tags">Tags: &nbsp;</label>
             	<select name="tags[]" id="tags" class="form-control select2-multi" multiple>
                     @foreach($tags as $t)
             		  <option value="{{$t->id}}">{{$t->name}}</option>
                     @endforeach
             	</select>
             </div>
-            <div class="form-group col-md-6">
+            <div class="form-group row">
             	<label for="description">Description:</label>
             	<textarea name="description" id="description" class="form-control" rows="10"></textarea>
             </div>
-            <div class="form-group col-md-6">
-            	<strong>Public:</strong>
-            	<label for="" class="inline-label">No &nbsp;<input type="radio" value="0" name="visibility"></label>
-            	<label for="">Yes &nbsp;<input type="radio" value="1" name="visibility" checked></label>
+            <div class="form-group row">
+            	<strong class="mr-5">Public:</strong>
+            	<label for="" class="inline-label">No &nbsp;<input type="radio" value="0" name="visibility" class="form-check-inline mr-2"></label>
+            	<label for="" class="inline-label">Yes &nbsp;<input type="radio" value="1" name="visibility"  class="form-check-inline" checked></label>
             </div>
-            <div class="form-group col-md-6">
+            <div class="form-group row">
             	<label for="album">Album:</label>
             	<select name="album" id="album" class="form-control" value="{{$selectedalbum ? $selectedalbum->id : ""}}" >
                     @if($selectedalbum)
@@ -62,7 +67,7 @@
             		
             	</select>
             </div>
-            <div class="col-md-6">
+            <div class="row">
                 <button type="submit" class="btn btn-success">Upload</button>
             </div>
 

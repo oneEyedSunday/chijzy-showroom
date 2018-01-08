@@ -9,10 +9,10 @@
 @endsection
 
 @section('content')
-  <div class="container mt-5 mleft-100">
+  <div class="container mt-5" id="force-left">
     <div class="row">
       <div class="col-md-8">
-        <h1>{{$tag->name}} Tag <small>{{$tag->media()->count()}} Media</small> <small>{{ $tag->albums()->count()}} Albums</small></h1>
+        <h1>{{$tag->name}} tag <p><small>{{$tag->media()->count()}} Media</small></p> <p><small>{{ $tag->albums()->count()}} Album(s)</small></p></h1>
       </div>
       <div class="col-md-2">
         <a href="{{route('tags.edit', $tag->id)}}" class="btn btn-primary pull-right btn-block btn-h1-spacing">Edit</a>

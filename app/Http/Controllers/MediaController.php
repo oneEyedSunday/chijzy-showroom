@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+
 use Illuminate\Http\Request;
 use App\Media;
 use App\Album;
@@ -10,9 +11,17 @@ use Storage;
 use File;
 use Response;
 use Image;
+use Session;
+
+if(defined('DS')){
+
+}else {
+    define('DS', DIRECTORY_SEPARATOR);
+}
 
 //todo
 // add slugs
+// add carbon for dates
 
 class MediaController extends Controller
 {
@@ -21,6 +30,7 @@ class MediaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
     public function index()
     {
         //
@@ -51,37 +61,37 @@ class MediaController extends Controller
      */
     public function store(Request $request)
     {
-        $video_vals = 'required|mimes:mp4,flv,3gpp,3gp|max:10240';
-        $image_vals = 'required|image|mimes:jpeg,png,jpg,gif,svg|max:5120';
-        $vals = ['media' => '', 'caption' => 'required'];
-        $vals['media'] =  $request->type == "image" ? $image_vals :  $video_vals;
+        $vals = ['media' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:5120',
+         'category' => 'required', 
+          'caption' => 'required|max:191',
+          'slug' => 'required|alpha_dash|max:191|min:5|unique:media,slug'];
         $this->validate($request, $vals);
 
-        $path = ''; // replace time with slug
-        $path = time().'.'.$request->media->getClientOriginalExtension();
+        $path = strtolower($request->slug) . '.' . $request->media->getClientOriginalExtension();
         // $request->media->move(public_path('uploads'), $path);
 
         // create thumbnail
         $io = $do = Image::make($request->media);
-        $do->fit(240,157)->save(public_path('uploads/thumbnails/') . $path);
+        $do->fit(240,157)->save(public_path('uploads' . DS. 'thumbnails'. DS) . $path);
 
-        // watermark
-        Image::make($request->media)->insert(public_path('owner/cre8tvs oficial logo.png'), 'top-left')->save(public_path('uploads/') . $path);
+        // // watermark
+        // Image::make($request->media)->insert(public_path('owner'. DS. 'cre8tvs oficial logo.png'), 'top-left')->save(public_path('uploads'. DS) . $path);
+        Image::make($request->media)->save(public_path('uploads' . DS) . $path);
 
 
         $media = new Media;
-        $media->type = $request->type;
+        $media->slug = $request->slug;
         $media->caption = $request->caption;
         $media->url = $path;
         $media->description = $request->description;
         $media->visibility = $request->visibility;
+        $media->category = $request->category;
         if($request->album){
             $media->album_id = $request->album;
         }
-        return $io->response('jpg');
-        // $media->save();
-        // $media->tags()->sync($request->tags, false);
-        // return redirect()->route('media.single.show', $media->id)->with('success','Media Uploaded successfully.');
+        $media->save();
+        $media->tags()->sync($request->tags, false);
+        return redirect()->route('media.single.show', $media->id)->with('success','Media Uploaded successfully.');
     }
 
     /**
@@ -120,12 +130,23 @@ class MediaController extends Controller
      */
     public function update(Request $request, $id)
     {
-        
-        $vals = ['caption' => 'required'];
-        $this->validate($request, $vals);
+        $media = Media::find($id);        
+        $vals = ['slug' => 'required|alpha_dash|max:191|min:5|unique:media.slug',
+         'category' => 'required',
+          'caption' => 'required|max:191'
+          ];
 
-        $media = Media::find($id);
-        $media->type = $request->type;
+        if($request->slug == $media->slug){
+          $this->validate($request,[
+         'category' => 'required',
+          'caption' => 'required|max:191'
+          ]);
+        }else{
+          $this->validate($request,$vals);
+        }
+
+        $media->slug = $request->slug;
+        $media->category = $request->category;
         $media->caption = $request->caption;
         $media->description = $request->description;
         $media->visibility = $request->visibility;
@@ -141,16 +162,14 @@ class MediaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        
         $media  = Media::find($id);
         $media->tags()->detach();
         $media->delete();
-        unlink(public_path('uploads/' . $media->url));
+        unlink(public_path('uploads/' . $request->input('file_url') ));
+        unlink(public_path('uploads/thumbnails/' . $request->input('file_url')));
         Session::flash('success','The media was deleted successfully!');
-        //since im using ajax to send req.
-        // return response(200);
         return redirect()->route('media.all');
     }
 

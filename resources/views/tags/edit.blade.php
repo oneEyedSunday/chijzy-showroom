@@ -10,14 +10,14 @@
 
 @section('content')
 
-<div class="container mt-5 mleft-100">
-      <div class="col-6">
+<div class="container mt-5" id="force-left">
+      <div class="col offset">
       	<form action="{{route('tags.update', $tag->id)}}" class="form" method="POST">
 	      {!! csrf_field() !!}
 	      <h2>Edit tag</h2>
-	      <div class="form-group col-4">
+	      <div class="form-group col">
 		      <label for="name">Name:</label>
-		      <input type="text" class="form-control" name="name" value={{$tag->name}}>
+		      <input type="text" class="form-control" name="name" value='{{$tag->name}}'>
 		      <input type="submit" class="btn btn-success btn-h1-spacing" value="Save Changes">
 		  </div>
       

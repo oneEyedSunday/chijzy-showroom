@@ -8,6 +8,11 @@ body {
   color: #5a5a5a;
 }
 
+html {
+  max-width: 1349px;
+  margin: 0;
+}
+
 
 /* CUSTOMIZE THE CAROUSEL
 -------------------------------------------------- */
@@ -96,6 +101,10 @@ body {
   width: 50px;
   height: 50px;
 }
+
+/*.navbar {
+  max-width: 1120px;
+}*/
 
 
 .dpd-bg {

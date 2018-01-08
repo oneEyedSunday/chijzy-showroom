@@ -10,27 +10,33 @@
 
 @section('content')
     @if($media->id)
-        <div class="container mt-5 mleft-100">
-                <h1>Edit Media</h1>
+        <div class="container mt-5 " id="force-left">
+                <h1 class="text-center">Edit Media</h1>
                  <form action="{{route('media.single.update', [$media->id])}}" class="form" method="POST" enctype="multipart/form-data">
 
                 {{ csrf_field() }} {{ method_field('PUT')}}
                 {{-- messages come from message partial --}}
-                    <div class="form-group col-md-6">
+                    <div class="form-group row">
                         <strong>Caption:</strong>
                         <input type="text" name="caption" class="form-control" placeholder="Title" maxlength="255" value="{{$media->caption}}">
                     </div>
-                    <div class="form-group col-md-6">
-                        <strong>Type:</strong>
-                        <select name="type" id="" class="form-control" value="{{$media->type}}">
-                            <option value="image" selected>Image</option>
-                            <option value="video">Video</option>
+                    <div class="form-group row">
+                        <label for="slug">Url Slug:</label>
+                        <input type="text" name="slug" id="slug" class="form-control" placeholder="Url Slug" required minlength="5" maxlength="191" value="{{$media->slug}}"> 
+                    </div>
+                    <div class="form-group row">
+                        <label for="category">Category:</label>
+                        <select name="category" id="category" class="form-control" value="{{$media->category}}" required>
+                            <option value="designs" selected= "{{ $media->category == 'designs' ? 'true' : 'false' }}">Designs</option>
+                            <option value="photos" selected= "{{ $media->category == 'photos' ? 'true' : 'false' }}">Photos</option>
                         </select>
                     </div>
-                    <div class="form-group col-md-6">
-                        <img src="{{ asset('uploads/'. $media->url) }}" alt="Error with file" class="img img-reponsive display-img">
+                    <div class="form-group row">
+                        <div class="col offset-lg-1 offset-sm-0 offset-md-1">
+                            <img src="{{ asset('uploads/'. $media->url) }}" alt="Error with file" class="img img-reponsive display-img">
+                        </div>
                     </div>
-                    <div class="form-group col-md-6">
+                    <div class="form-group row">
                         <label for="tags">Tags:</label>
                         <select name="tags[]" id="tags" class="form-control select2-multi" multiple>
                             @foreach($tags as $t)
@@ -38,16 +44,16 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="form-group col-md-6">
+                    <div class="form-group row">
                         <label for="description">Description:</label>
                         <textarea name="description" id="description" class="form-control" rows="10">{{$media->description}}</textarea>
                     </div>
-                    <div class="form-group col-md-6">
+                    <div class="form-group row">
                         <strong>Public:</strong>
-                        <label for="" class="inline-label">No &nbsp;<input type="radio" value="0" name="visibility" {{$media->visibility ? "" : "checked"}}></label>
-                        <label for="">Yes &nbsp;<input type="radio" value="1" name="visibility"{{$media->visibility ? "checked" : ""}}></label>
+                        <label for="" class="inline-label">No &nbsp;<input type="radio" value="0" name="visibility" {{$media->visibility ? "" : "checked"}} class="form-check-inline mr-2"></label>
+                        <label for="">Yes &nbsp;<input type="radio" value="1" name="visibility"{{$media->visibility ? "checked" : ""}} class="form-check-inline"></label>
                     </div>
-                    <div class="form-group col-md-6">
+                    <div class="form-group row">
                         <strong>Album:</strong>
                         <select name="album" id="" class="form-control" value="{{$media->album ? $media->album->id : ''}}">
                             <option value="">--Remove from album--</option>
@@ -56,7 +62,7 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="col-md-6">
+                    <div class="row">
                         <button type="submit" class="btn btn-success">Submit Changes</button>
                     </div>
 

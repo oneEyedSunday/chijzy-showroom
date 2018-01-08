@@ -15,10 +15,11 @@ class CreateMediaTable extends Migration
     {
         Schema::create('media', function (Blueprint $table) {
             $table->increments('id')->unsigned();
-            $table->enum('type',['image', 'video'])->default('image');
+            $table->string('slug',191)->unique();
             $table->string('caption');
             $table->string('url');
             $table->text('description')->nullable();
+            $table->enum('category', ['designs', 'photos']);
             $table->boolean('visibility')->default('1');
             $table->integer('album_id')->nullable();
             $table->timestamps();

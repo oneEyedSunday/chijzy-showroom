@@ -9,7 +9,7 @@
 @endsection
 
 @section('content')
-	<div class="container mt-5 mleft-100">
+	<div class="container mt-5" id="force-left">
 		
 		<div class="row">
 			<h1>Manage Albums</h1>
@@ -20,7 +20,7 @@
 					<tr>
 						<th>Cover Photo</th>
 						<th>Title</th>
-						<th>Description (cropped)</th>
+						<th class="small-screen-hide">Description (cropped)</th>
 						<th>Media count</th>
 						<th></th>
 					</tr>
@@ -28,13 +28,13 @@
 				<tbody>
 		@forelse($albums as $a)
 			<tr>
-				<td class="small-screen-hide"><a href="{{ route('album.single.show', [$a->id]) }}"><img class="cropped-show" src="{{ asset('uploads/'. $a->cover_image_url) }}" alt="Unable to find albums cover photo"></a></td>
+				<td><a href="{{ route('album.single.show', [$a->id]) }}"><img class="cropped-show" src="{{ asset('uploads/'. $a->cover_image_url) }}" alt="Unable to find albums cover photo"></a></td>
 				<td>{{ $a->title }}</td>
-				<td>{{substr($a->description, 0,25)}}{{ strlen($a->description) > 25 ? "..." : ""}}</td>
+				<td class="small-screen-hide">{{substr($a->description, 0,25)}}{{ strlen($a->description) > 25 ? "..." : ""}}</td>
 				<td>{{ $a->media->count()}}</td>
 				<td>
 					<a href="{{ route('album.single.edit', [$a->id]) }}" class="btn btn-success">Edit</a>
-					<a href="{{ route('album.single.delete', [$a->id]) }}" class="btn btn-danger" id="delLink">
+					<a href="#" class="btn btn-danger" id="delLink">
                      Delete</a>
                  <form id="delete-form" action="{{ route('album.single.delete', [$a->id]) }}" method="POST" style="display: none;">
                     {{ csrf_field() }} {{ method_field('DELETE')}}
@@ -48,14 +48,7 @@
 			</table>
 
 		<div class="text-center">
-       {!! $albums->links() !!}
-       <div class="row">
-         <div class="col-md-12">
-           <div class="col-md-8-offset-2">
-             {!! "Page " . $albums->currentPage() . " of " .  $albums->lastPage() !!}     
-           </div>
-         </div>
-       </div>
+       {!! $albums->links('vendor.pagination.bootstrap-4') !!}
       </div>
     </div>	
 	</div>
@@ -65,10 +58,14 @@
 
 @section('scripts')
 	<script>
-		var del = document.getElementById("delLink");
-		del.addEventListener('click', function(event){
-			event.preventDefault();
-			if(confirm('Are you sure you want to delete?')) document.getElementById('delete-form').submit();
+		$('a.btn.btn-danger').each(function(index, elem){
+			$(this).click(function(event){
+				event.preventDefault();
+				if(confirm("Are you sure you want to delete ?")){
+					$(this.nextElementSibling.submit());
+				}
+				return false;
+			})
 		})
 	</script>
 @endsection

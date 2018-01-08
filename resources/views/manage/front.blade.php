@@ -9,84 +9,85 @@
 	<style>
 		.balance-out{
 			width: 100%;
-			max-height: 440px; 
+			max-height: 400px; 
 		}
 	</style>
 
 @endsection
 
 @section('content')
-	<div class="container mt-5 mleft-100">
+	<div class="container mt-5" id="force-left">
+
+		<form action="{{ route('manage.set.frontend') }}" class="form" method="POST">
+								{!! csrf_field() !!}
 		@foreach($currentCarousel as $c)
-		<div class="card">
-			<img src="{{asset($c["img_src"])}}" alt="{{$c["img_alt"]}}" class="card-img-top balance-out">
-			<div class="card-block">
-				<h1 class="card-title text-center">Carousel Image {{$c["index"]}}</h1>
-				<form action="" class="form col-lg-12">
-					
-					<div class="form-group col-lg-8 offset-lg-2">
-						<label for="img_src" class="inline-label">Location of image:</label>
-						<input type="text" id="img_src" placeholder="Src of image" class="form-control form-text" value="{{$c["img_src"] }}">
+			<div class="row">
+				<div class="col-lg col-md col sm">
+					<div class="card mt-5 mb-5">
+						@if($c->img_src)<img src="{{asset($c->img_src)}}" alt="Not found" class="card-img-top img img-responsive display-img">@endif
+						<div class="card-title text-center">
+							<h1>Carousel item</h1>
+						</div>
+						<div>		
+							<div class="form-group row">
+								<label for="img_src" class="col-2 col-form-label offset-1">Location of image:</label>
+								<div class="col-8">
+									<input type="text" id="img_src" name="{{'img_src' . $loop->iteration }}" placeholder="Src of image" class="form-control form-text" value="{{$c->img_src}}">
+								</div>
+							</div>
+							<div class="form-group row">
+								<label for="position" class="col-2 col-form-label offset-1">Position of image:</label>
+								<div class="col-8">
+									<input type="number" id="position" name="{{'position' . $loop->iteration }}" placeholder="Position of image in carousel" class="form-control" value="{{ $c->position}}">
+								</div>					
+							</div>
+							<div class="form-group row">
+								<label for="heading" class="col-2 col-form-label offset-1">Heading of text:</label>
+								<div class="col-8">
+									<input type="text" placeholder="Heading"  id="heading" name="{{'heading' . $loop->iteration }}" class="form-control" value="{{$c->heading}}">
+								</div>		
+							</div>
+							<div class="form-group row">
+								<label for="text" class="col-2 col-form-label offset-1">Text body:</label>
+								<div class="col-8">
+									<input type="text" placeholder="Text" id="text" class="form-control" name="{{'text' . $loop->iteration }}" value="{{$c->text_body}}">
+								</div>	
+							</div>
+							<div class="form-group row">
+								<label for="link_text" class="col-2 col-form-label offset-1">Text of link:</label>
+								<div class="col-8">
+									<input type="text" id="link_text" placeholder="Link" class="form-control" name="{{'link_text' . $loop->iteration }}" value="{{$c->link_text}}">
+								</div>	
+							</div>
+							<div class="form-group row">
+								<label for="link_ref" class="col-2 col-form-label offset-1">Target of link:</label>
+								<div class="col-8">
+									<input type="text" id="link_ref" placeholder="Target of Link" class="form-control" name="{{'link_ref' . $loop->iteration }}" value="{{$c->link_ref}}">
+								</div>	
+							</div>
+							<div class="form-group row">
+									<div class="col-2 offset-1">
+										Switch on:
+									</div>
+									
+										<label for="" class="ml-2">Yes: <input type="radio" name="{{'state' . $loop->iteration }}" {{$c->visible ? "checked" : ""}} value="1"></label>
+										<label for="" class="ml-2">No: <input type="radio" name="{{'state' . $loop->iteration }}" {{$c->visible ? "" : "checked"}} value="0"></label>
+									
+								</div>
+							</div>		
+						</div>
 					</div>
-					<div class="form-group col-lg-8 offset-lg-2">
-						<input type="text" placeholder="Heading" class="form-control" value="{{ $c["heading"]}}">
-					</div>
-					<div class="form-group col-lg-8 offset-lg-2">
-						<input type="text" placeholder="Text" class="form-control" value="{{$c["text_body"]}}">
-					</div>
-					<div class="form-group col-lg-8 offset-lg-2">
-						<input type="text" placeholder="Link" class="form-control" value="{{$c["link_text"]}}">
-					</div>
-					<div class="form-group col-lg-8 offset-lg-2">
-						<input type="text" placeholder="Where does link go" class="form-control" value="{{$c["link_ref"]}}">
-					</div>
-				</form>
-			</div>		
-		</div>
+				</div>
+
 		@endforeach
 
-		<div class="card">
-			<div class="card-top">
-				<h1 class="card-title">
-					Privacy Policy
-				</h1>
-			</div>
-			<div class="card-body">
-				<p class="card-text">
-					{{$privacy}}
-				</p>
+		<div class="row">
+			<div class="col-lg-8 offset-lg-2">
+				<input type="submit" value="Update carousel" class="btn btn-success mb-2">
 			</div>
 		</div>
-
-		<div class="card">
-			<div class="card-top">
-				<h1 class="card-title">
-					Terms of Use
-				</h1>
-			</div>
-			<div class="card-body">
-				<p class="card-text">
-					{{$tos}}
-				</p>
-			</div>
-		</div>
-
-		<div>
-			<p class="lead">
-				Ok, so this is what i'm gonna do.
-				I'd have to save carousel in db.
-				and all front end stuff in db
-				so i can reset them and all.
-				so, first of all list how the front end looks like at this point
-				then an option to change it (will be showned by default)
-				hiidden with javascript
-				but, im worried about the load of querying the db everytime the page loads.
-				caching in essemce
-				i think thi that laravel caches templates so that'd help
-				so in development i'd save as array
-				would or mignt not move the front end data to the db
-			</p>
-		</div>
+		</form>
+		
 	</div>
 @endsection
 

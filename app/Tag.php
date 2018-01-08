@@ -13,4 +13,9 @@ class Tag extends Model
     public function albums(){
     	return $this->belongsToMany('App\Album', 'album_tag', 'tag_id', 'album_id');
     }
+
+    public function visible(){
+      $query = $this->media();
+      return $query->where("visibility", '=', '1')->get()->pluck('category')->toArray();
+    }
 }
